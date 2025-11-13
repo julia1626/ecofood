@@ -1,4 +1,3 @@
-// pages/index.tsx
 'use client';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -25,15 +24,17 @@ export default function Home() {
   const [msgStatus, setMsgStatus] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
 
-  // hardcoded fallback users (sempre presentes)
+  // usuários padrão para fallback
   const fallbackUsers = [
     { email: 'cliente@gmail.com', password: 'cliente123', role: 'cliente' },
     { email: 'empresa@empresa.com', password: 'empresa123', role: 'empresa' },
   ];
 
-  // helper: tenta o fallback (usuários hardcoded)
+  // fallback local
   const tryFallbackLogin = (normalizedEmail: string, passwordValue: string) => {
-    const user = fallbackUsers.find(u => u.email === normalizedEmail && u.password === passwordValue);
+    const user = fallbackUsers.find(
+      (u) => u.email === normalizedEmail && u.password === passwordValue
+    );
     if (user) {
       localStorage.setItem('userRole', user.role);
       if (user.role === 'cliente') window.location.href = '/cliente';
@@ -43,63 +44,62 @@ export default function Home() {
     return false;
   };
 
-  // login handler: primeiro tenta a API (/api/clients/login), se falhar tenta fallback
+  // ===== LOGIN CORRIGIDO: escolhe endpoint conforme role =====
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     const normalizedEmail = emailLogin.trim().toLowerCase();
+    const trimmedPassword = password.trim();
 
-    // basic quick validation
-    if (!normalizedEmail || !password) {
+    if (!normalizedEmail || !trimmedPassword) {
       alert('Preencha email e senha.');
       return;
     }
 
+    const endpoint =
+      role === 'empresa' ? '/api/empresas/login' : '/api/clients/login';
+
     try {
-      const res = await fetch('/api/clients/login', {
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: normalizedEmail, password }),
+        body: JSON.stringify({ email: normalizedEmail, password: trimmedPassword }),
       });
 
       const json = await res.json().catch(() => ({}));
 
-      if (res.ok) {
-        // login via backend
-        const userRole = json.role || 'cliente';
+      if (res.ok && json.ok !== false) {
+        const userRole = json.role || role || 'cliente';
         localStorage.setItem('userRole', userRole);
         if (userRole === 'cliente') window.location.href = '/cliente';
         else window.location.href = '/empresa';
         return;
       }
 
-      // se a API respondeu 401 (credenciais inválidas) ou outro erro,
-      // tentamos o fallback com usuários hardcoded
-      const usedFallback = tryFallbackLogin(normalizedEmail, password);
+      const usedFallback = tryFallbackLogin(normalizedEmail, trimmedPassword);
       if (!usedFallback) {
-        // mostra a mensagem retornada pela API ou padrão
         alert(json?.error || 'Email ou senha incorretos!');
       }
     } catch (err) {
-      // erro de conexão — tenta fallback local
-      const usedFallback = tryFallbackLogin(normalizedEmail, password);
+      const usedFallback = tryFallbackLogin(normalizedEmail, trimmedPassword);
       if (!usedFallback) {
         alert('Erro de conexão ao autenticar. Tente novamente mais tarde.');
       }
     }
   };
+  // ============================================================
 
-  // buscar mensagens ao carregar
+  // carregar mensagens
   useEffect(() => {
     fetch('/api/messages')
-      .then(res => res.json())
+      .then((res) => res.json())
       .then((data) => setMessages(data || []))
       .catch(() => setMessages([]));
   }, []);
 
-  // enviar contato por email
+  // enviar contato
   const enviarContato = async (e: React.FormEvent) => {
     e.preventDefault();
-    setContatoStatus('enviando');
+    setContatoStatus('enviando...');
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
@@ -110,39 +110,39 @@ export default function Home() {
           message: contatoMensagem,
         }),
       });
-      const json = await res.json();
+      const json = await res.json().catch(() => ({}));
       if (res.ok) {
-        setContatoStatus('enviado com sucesso!');
-        setContatoNome(''); setContatoEmail(''); setContatoMensagem('');
+        setContatoStatus('Enviado com sucesso!');
+        setContatoNome('');
+        setContatoEmail('');
+        setContatoMensagem('');
       } else {
         if (json && json.fallbackMailto) {
           window.location.href = json.fallbackMailto;
         }
-        setContatoStatus('erro ao enviar. Tente novamente.');
+        setContatoStatus('Erro ao enviar. Tente novamente.');
       }
     } catch (err) {
-      setContatoStatus('erro de conexão. Tente novamente.');
+      setContatoStatus('Erro de conexão. Tente novamente.');
     }
     setTimeout(() => setContatoStatus(null), 3500);
   };
 
-  // postar mensagem no site
+  // postar mensagem
   const postarMensagem = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMsgStatus('enviando');
+    setMsgStatus('enviando...');
     try {
       const res = await fetch('/api/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: msgNome,
-          message: msgTexto,
-        }),
+        body: JSON.stringify({ name: msgNome, message: msgTexto }),
       });
       if (!res.ok) throw new Error('Falha ao postar');
       const saved = await res.json();
-      setMessages(prev => [saved, ...prev]);
-      setMsgNome(''); setMsgTexto('');
+      setMessages((prev) => [saved, ...prev]);
+      setMsgNome('');
+      setMsgTexto('');
       setMsgStatus('Mensagem postada!');
     } catch (err) {
       setMsgStatus('Erro ao postar. Tente novamente.');
@@ -153,20 +153,17 @@ export default function Home() {
   const apagarMensagem = async (id: string) => {
     if (!window.confirm('Tem certeza que deseja apagar esta mensagem?')) return;
 
-    setMessages(prev => prev.filter(m => m.id !== id));
+    setMessages((prev) => prev.filter((m) => m.id !== id));
 
     try {
-      const res = await fetch(`/api/messages/${id}`, {
-        method: 'DELETE',
-      });
-
+      const res = await fetch(`/api/messages/${id}`, { method: 'DELETE' });
       if (!res.ok) {
-        const data = await fetch('/api/messages').then(r => r.json()).catch(() => []);
+        const data = await fetch('/api/messages').then((r) => r.json()).catch(() => []);
         setMessages(data || []);
         alert('Erro ao apagar a mensagem no servidor.');
       }
     } catch (err) {
-      const data = await fetch('/api/messages').then(r => r.json()).catch(() => []);
+      const data = await fetch('/api/messages').then((r) => r.json()).catch(() => []);
       setMessages(data || []);
       alert('Erro de conexão ao apagar. Tente novamente.');
     }
@@ -224,11 +221,12 @@ export default function Home() {
                 Entrar
               </button>
             </form>
+
             <div className="text-center mt-3">
               <a href="/cadastrar-cliente" className="text-sm text-[#b94b4b] hover:underline">Cadastrar cliente</a>
             </div>
             <div className="text-center mt-3">
-              <a href="#" className="text-sm text-[#b94b4b] hover:underline">Cadastrar empresa</a>
+              <a href="/cadastrar-empresa" className="text-sm text-[#b94b4b] hover:underline">Cadastrar empresa</a>
             </div>
           </div>
         </div>

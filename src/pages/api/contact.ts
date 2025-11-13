@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   if (!name || !email || !message) return res.status(400).json({ ok: false, message: 'Missing fields' });
 
   // Destino do contato (configurável via env)
-  const to = process.env.CONTACT_TO || 'juliaoliveilou@gmail.com';
+  const to = process.env.CONTACT_TO || 'ecofood005@gmail.com';
 
   // Se variáveis SMTP configuradas, tenta enviar via nodemailer
   const host = process.env.SMTP_HOST;

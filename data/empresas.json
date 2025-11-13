@@ -1,0 +1,55 @@
+[
+  {
+    "id": "1763051620330lsrmlc",
+    "companyName": "Sempre Vale",
+    "cnpj": "548961863158",
+    "location": "Limeira, Sp",
+    "respName": "Beatriz",
+    "respPhone": "19 994654894",
+    "status": "approved",
+    "createdAt": "2025-11-13T16:33:40.330Z",
+    "credentials": {
+      "email": "xngtsu@ecofood.local",
+      "password": "7pguleh7"
+    }
+  },
+  {
+    "id": "17630611624649z7p9y",
+    "companyName": "Savegnago",
+    "cnpj": "54645652314568",
+    "location": "limeira",
+    "respName": "Clara",
+    "respPhone": "19565",
+    "status": "rejected",
+    "createdAt": "2025-11-13T19:12:42.464Z",
+    "credentials": null
+  },
+  {
+    "id": "1763062803526dyqreb",
+    "companyName": "Pão de Açucar",
+    "cnpj": "454328924147844",
+    "location": "Limeira,SP",
+    "respName": "Júlia",
+    "respPhone": "19653581584",
+    "status": "approved",
+    "createdAt": "2025-11-13T19:40:03.526Z",
+    "credentials": {
+      "email": "xu4cct@ecofood.local",
+      "password": "jxll4rh8"
+    }
+  },
+  {
+    "id": "1763063362716zhyk89",
+    "companyName": "empressa multimilionaria",
+    "cnpj": "27112024",
+    "location": "New York",
+    "respName": "Matheus Costa Ribeiro",
+    "respPhone": "19988587052",
+    "status": "approved",
+    "createdAt": "2025-11-13T19:49:22.716Z",
+    "credentials": {
+      "email": "xuice2@ecofood.local",
+      "password": "y7efnttf"
+    }
+  }
+]
