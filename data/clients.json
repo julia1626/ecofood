@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1762545182706",
+    "email": "julia1@gmail.com",
+    "password": "julia123",
+    "createdAt": "2025-11-07T19:53:02.706Z"
+  },
+  {
+    "id": "1762535367642",
+    "email": "clara@gmail.com",
+    "password": "clara123",
+    "createdAt": "2025-11-07T17:09:27.642Z"
+  },
+  {
+    "id": "1762534678190",
+    "email": "julia@gmail.com",
+    "password": "julia123",
+    "createdAt": "2025-11-07T16:57:58.190Z"
+  },
+  {
+    "id": "1762534601131",
+    "email": "endrew1@gmail.com",
+    "password": "endrew123",
+    "createdAt": "2025-11-07T16:56:41.131Z"
+  }
+]
