@@ -1,17 +1,5 @@
 [
   {
-    "id": "47f8dd3d-6cbb-4970-8882-87f8e1d86f16",
-    "name": "Julia",
-    "message": "oii odeio preto",
-    "createdAt": "2025-11-13T19:49:48.325Z"
-  },
-  {
-    "id": "b9ec47a5-58ac-4e70-8faf-81320be0c7dd",
-    "name": "Júlia",
-    "message": "Oie",
-    "createdAt": "2025-11-13T19:18:41.893Z"
-  },
-  {
     "id": "f5d17124-cb3c-479f-b9c1-0bc091ed4ec3",
     "name": "julia",
     "message": "que projeto legal",
@@ -28,11 +16,5 @@
     "name": "Endrew",
     "message": "Produtos muito bons e dentro da data de validade!",
     "createdAt": "2025-11-06T14:23:09.407Z"
-  },
-  {
-    "id": "309acf83-f9e4-45a0-8848-4b8854c3e658",
-    "name": "Júlia",
-    "message": "Bom!",
-    "createdAt": "2025-11-06T14:21:25.272Z"
   }
 ]
